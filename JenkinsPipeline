@@ -1,1 +1,41 @@
-#todo
+pipeline{
+
+agent any
+
+stages{
+
+stage('Clone the playbook repo')
+{
+   steps{
+   git branch: 'main', url: 'https://github.com/hsztan/CalTechCEPAnsible'
+
+}
+
+}
+
+stage('Playbook to Build code')
+{
+
+steps{
+ansiblePlaybook credentialsId: 'ansiblecredentials', disableHostKeyChecking: true, installation: 'myansible', inventory: 'dev.inv', playbook: 'CEPPlaybookMavenBuild.yml'
+
+}
+
+}
+
+
+stage('Playbook to deploy code')
+{
+
+steps{
+ansiblePlaybook credentialsId: 'ansiblecredentials', disableHostKeyChecking: true, installation: 'myansible', inventory: 'dev.inv', playbook: 'CEPPlaybookDockerDeployment.yml'
+
+}
+
+}
+
+
+}
+
+
+}
